@@ -1,0 +1,130 @@
+{include file="layouts/header" /}
+  
+  <div class="layui-body">
+    <!-- 内容主体区域 -->
+    <div class="" style="height: 50px;line-height: 50px;margin-bottom: 0;border-radius: 0;background-color: #fff;box-shadow: 0 1px 2px 0 rgba(0,0,0,.05);">
+	    <div style="border-top: 1px solid #f6f6f6;padding: 0 15px;font-size: 0;height: 50px;line-height: 50px;margin-bottom: 0;border-radius: 0;">
+		    <span class="layui-breadcrumb" >
+			  <a href="" style="font-style: 微软雅黑;" >管理员</a>
+			  <a style=""><cite>{if $item.id} 编辑{else}添加 {/if}</cite></a>
+			</span>
+	    </div>
+
+	</div>
+
+	<!-- 内容主体 -->
+    <div style="padding: 15px;position: relative;margin: 0 auto;height: 90%;">
+    	<div style="margin: -4.5px;height: 100%;">
+    		<div style="padding: 7.5px;width: 100%;float: left;background-color: #fff;margin-bottom: 0;height: auto;">
+
+    			<div class="layui-container" style="width: 100%;padding: 0 0px">
+    				    			<!-- 搜索区域 -->
+				  <div class="layui-row" style="text-align: center;">
+				      <label style="font-size: 24px;font-family: 微软雅黑;margin-left: auto; margin-right: auto;">管理员资料</label>
+
+				 </div>
+				</div>
+
+				<hr>
+				<!-- 表单区域 -->
+				<div>
+					<div class="layui-form">
+						{if $item.id}
+					  <div class="layui-form-item">
+					    <label class="layui-form-label">账号id</label>
+					    <div class="layui-input-block">
+					      <input type="text" name="id"  class="layui-input" value="{$item.id}" disabled="">
+					    </div>
+					  </div>
+						{/if}
+					  <div class="layui-form-item">
+					    <label class="layui-form-label">账号名</label>
+					    <div class="layui-input-block">
+					      <input type="text" name="name"  class="layui-input" value="{$item.name}" {if $item.id} disabled="" {/if}>
+					    </div>
+					  </div>
+
+					  <div class="layui-form-item">
+					    <label class="layui-form-label">密码</label>
+					    <div class="layui-input-block">
+					      <input type="text" name="password"  class="layui-input" value="" >
+					      <span>添加/修改时请输入密码</span>
+					    </div>
+					  </div>
+
+					  <div class="layui-form-item">
+					    <label class="layui-form-label">昵称</label>
+					    <div class="layui-input-block">
+							<input type="text" name="nickname"  class="layui-input" value="{$item.nickname}" >
+					    </div>
+					  </div>
+
+					  <div class="layui-form-item">
+					    <label class="layui-form-label">手机号</label>
+					    <div class="layui-input-block">
+							<input type="text" name="phone"  class="layui-input" value="{$item.phone}" >
+					    </div>
+					  </div>
+					  <div class="layui-form-item">
+					    <label class="layui-form-label">校区</label>
+					    <div class="layui-input-block">
+							<select name="school" lay-filter="school" id="school">
+						      		<option value="0">--全部校区--</option>
+						      		{foreach $school as $k=>$v}
+						        	<option value="{$k}">{$v}</option>
+						        	{/foreach}
+						      	</select>
+					    </div>
+					  </div>
+
+
+ 						    <div class="layui-form-item text-center">
+						        <button class="layui-btn" type='submit' style="width: 100px;" lay-submit>保存数据</button>
+						        <button class="layui-btn layui-btn-primary" type='button'  style="width: 100px;"  data-close>返&nbsp;&nbsp;&nbsp;回</button>
+						    </div>
+					</div>
+
+				</div>
+
+
+    		</div>
+
+    	</div>
+
+    </div>
+
+
+
+
+  </div>
+	  <script type="text/javascript">
+	  	var bool = true;
+	  	layui.use(['form'], function(){
+		  	var form = layui.form;
+		  	form.on('submit()', function(data){
+			  // console.log(data.elem) //被执行事件的元素DOM对象，一般为button对象
+			  // console.log(data.form) //被执行提交的form对象，一般在存在form标签时才会返回
+			  // console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
+			if (!bool) {return false;}
+			bool = false;
+			$.post("/index/admin/datasave",data.field,function(rtn){
+			  if(rtn.code==200){
+			    layer.msg(rtn.msg);
+			    setTimeout(function(){
+			      window.history.go(-1);
+			    },1500);
+			  }else{
+			  	bool = true;
+			    layer.msg(rtn.msg);
+			  }
+			},"json");
+			  return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+			});
+		});
+
+	</script>
+  <style type="text/css">
+  	html {background-color: #f2f2f2;color: #666;}
+  	.text-center {text-align: center;}
+  </style>
+{include file="layouts/footer" /}

@@ -1,0 +1,228 @@
+{include file="layouts/header" /}
+  
+  <div class="layui-body">
+    <!-- 内容主体区域 -->
+    <div class="" style="height: 50px;line-height: 50px;margin-bottom: 0;border-radius: 0;background-color: #fff;box-shadow: 0 1px 2px 0 rgba(0,0,0,.05);">
+	    <div style="border-top: 1px solid #f6f6f6;padding: 0 15px;font-size: 0;height: 50px;line-height: 50px;margin-bottom: 0;border-radius: 0;">
+		    <span class="layui-breadcrumb" >
+			  <a href="" style="font-style: 微软雅黑;" >订单</a>
+			  <a style=""><cite>提现记录</cite></a>
+			</span>
+	    </div>
+
+	</div>
+
+	<!-- 内容主体 -->
+    <div style="padding: 15px;position: relative;margin: 0 auto;height: 90%;">
+    	<div style="margin: -4.5px;height: 100%;">
+    		<div style="padding: 7.5px;width: 100%;float: left;background-color: #fff;margin-bottom: 0;height: 100%;">
+
+    			<div class="layui-container" style="width: 100%;padding: 0 0px">
+    				    			<!-- 搜索区域 -->
+				  <div class="layui-row">
+				    <div class="layui-col-md4">
+				      <label style="font-size: 16px;font-family: 微软雅黑;">搜&nbsp;索&nbsp;：</label>
+				    </div>
+
+				    <div class="layui-col-md8" style="padding-right: 20px;">
+				    	<div class="layui-row ">
+				      		<div class="layui-col-md2">
+					      		&nbsp;
+					      	</div>
+					      	<div class="layui-col-md2" style="padding: 2px;">
+					      		<input type="text" class="layui-input" id="timestart" placeholder="起始时间">
+					      	</div>
+					      	<div class="layui-col-md2" style="padding: 2px;">
+					      		<input type="text" class="layui-input" id="timeend" placeholder="结束时间">
+					      	</div>
+					      	<div class="layui-col-md2" style="padding: 2px;">
+							      <input type="text" name="title"  placeholder="请输入用户id" autocomplete="off" class="layui-input" id="userid">
+					      	</div>
+
+						    <div class="layui-col-md2" style="padding: 2px;">
+						       <div class="layui-form">
+							      	<select name="interest" lay-filter="aihao" id="status">
+							      		{volist name="status" id="v"}
+							      		<option value="{$key}">{$v}</option>
+										{/volist}
+							      	</select>
+							    </div> 
+						    </div>
+						    <div class="layui-col-md1" style="padding: 2px;padding-left: 12px;">
+					        	&nbsp;
+						    </div>
+						    <div class="layui-col-md1" style="padding: 2px;">
+					        	<button class="layui-btn" id="searchbtn">搜&nbsp;&nbsp;索</button>
+						    </div>
+
+				      	</div>
+				    </div>
+				 </div>
+
+				 <div class="layui-row">
+				 	<div class="layui-col-md6 ">
+					 	<div class="layui-btn-group demoTable">
+						  <!-- <button class="layui-btn" data-type="getCheckData" id="multidelte">~~~</button> -->
+						  <!-- <button class="layui-btn" data-type="getCheckLength">获取选中数目</button>
+						  <button class="layui-btn" data-type="isAll">验证是否全选</button> -->
+						</div>
+					</div>
+					<div class="layui-col-md6">
+					      		
+					</div>
+
+				 </div>
+				</div>
+
+				<hr>
+				<!-- 表格区域 -->
+				<div>
+					<table id="tabledemo" lay-filter="tabledemo"></table>
+				</div>
+
+
+    		</div>
+
+    	</div>
+
+    </div>
+
+  </div>
+
+
+
+	  <script type="text/javascript">
+	  	layui.use(['form','table','laydate'], function(){
+		  	var form = layui.form;
+	    	var laydate = layui.laydate;
+
+			//表格
+		  	var table = layui.table;
+	  
+		  table.render({
+		    elem: '#tabledemo'
+		    ,url:'/index/order/withdrawlist/'
+		    ,cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+		    ,cols: [[
+		    	{type:'checkbox'}
+		      ,{field:'id',  title: 'ID', width:60, sort: true}
+		      ,{field:'userid',  title: '用户id', width:80,}
+		      ,{field:'wxaccount',  title: '微信号'}
+		      ,{field:'paypoint', title: '提现积分'}
+		      ,{field:'pay', title: '实际金额(￥)'}
+		      ,{field:'addtime', title: '生成时间', sort: true}
+		      ,{field:'endtime', title: '完成时间'}
+		      ,{field:'note', title: 'note'}
+		      ,{field:'status', title: '状态',templet: '#statusTpl', sort: true}
+		      ,{field:'', width:280,title:'操作',toolbar: '#barDemo'}
+		    ]]
+		    ,response: {
+  				statusCode: 200 //成功的状态码，默认：0
+			} 
+			,page: true
+			,limit: 100
+			,limits: [15,30,50,100]    
+		  });
+
+		  //搜索
+		  $(document).on('click','#searchbtn',function(){
+		  	//执行表格重载
+		      table.reload('tabledemo', {
+		        page: {
+		          curr: 1 //重新从第 1 页开始
+		        }
+		        ,where: {
+	            	userid: $('#userid').val(),
+	            	status: $('#status').val(),
+	            	timestart: $('#timestart').val(),
+	            	timeend: $('#timeend').val()
+		        }
+		      });
+		  });
+
+		  	//时间组件
+			laydate.render({
+			    elem: '#timestart' //指定元素
+			    ,type:'datetime'
+			});
+			laydate.render({
+			    elem: '#timeend' //指定元素
+			    ,type:'datetime'
+			});
+
+						//监听点击事件
+		  	table.on('tool(tabledemo)', function(obj){ //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+			  var data = obj.data; //获得当前行数据
+			  var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+			  var tr = obj.tr; //获得当前行 tr 的DOM对象
+			  var id = data.id;
+
+			  if(layEvent === 'cancel'){ //取消
+			  	layer.confirm('确认要手动取消吗?该操作无法撤回，操作成功后积分退还用户账户', {icon: 3, title:'提示'}, function(index){
+	  			  	$.post('/index/order/withdrawcancel', {id: id}, function(data, textStatus, xhr) {
+				  		if(data.code == 200){
+				  			var span = $(tr).find('span[name="statustext"]')[0];
+				  			$(span).removeClass();
+				  			$(span).addClass('color_cancel');
+				  			$(span).text('提现取消');
+					    	layer.msg(data.msg);
+					  	}else{
+						    layer.msg(data.msg);        
+					  	}
+				  	},"json");	
+				  
+				  	layer.close(index);
+				});
+			  } else if(layEvent === 'finish'){ //完成
+			  	layer.confirm('确认要更改状态为:确认已支付?该操作无法撤回', {icon: 3, title:'提示'}, function(index){
+				  	$.post('/index/order/withdrawfinish', {id: id}, function(data, textStatus, xhr) {
+				  		if(data.code == 200){
+				  			var span = $(tr).find('span[name="statustext"]')[0];
+				  			$(span).removeClass();
+				  			$(span).addClass('color_finish');
+				  			$(span).text('完成提现');
+					    	layer.msg(data.msg);
+					  	}else{
+						    layer.msg(data.msg);        
+					  	}
+				  	},"json");	
+			  	});	
+	  	
+			  } else if(layEvent === 'withdraw'){ //编辑
+			    layer.confirm('确认通过线上转账的方式进行提现吗，退款完成后更改状态为:确认已支付?该操作无法撤回', {icon: 3, title:'提示'}, function(index){
+				  	$.post('/index/order/withdrawonline', {id: id}, function(data, textStatus, xhr) {
+				  		if(data.code == 200){
+				  			window.location.reload();
+					  	}else{
+						    layer.msg(data.msg);     
+					  	}
+				  	},"json");	
+			  	});	
+			  }
+			});
+		});
+
+	</script>
+  	<script type="text/html" id="barDemo">
+		<a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="withdraw">线上转账</a>
+	  	<a class="layui-btn layui-btn-xs" lay-event="finish">确认已支付</a>
+	  	<a class="layui-btn layui-btn-xs" lay-event="cancel">手动取消</a>
+	</script>
+	<script type="text/html" id="statusTpl">
+	  {{#  if(d.status === 1){ }}
+	    <span name="statustext" class="">{{ d.statustext }}</span>
+	  {{#  } else if(d.status === 2) { }}
+	    <span name="statustext" class="color_finish">{{ d.statustext }}</span>
+	  {{#  } else if(d.status === 3) { }}
+	    <span name="statustext" class="color_cancel">{{ d.statustext }}</span>
+	  {{#  } else{ }}
+	    <span name="statustext" class="color_ok">{{ d.statustext }}</span>
+	  {{#  } }}
+	</script>
+  <style type="text/css">
+  	html {background-color: #f2f2f2;color: #666;}
+  	.color_ok{color: #5FB878}
+  	.color_finish{color: #01AAED}
+  	.color_cancel{color: #FF5722}
+  </style>
+{include file="layouts/footer" /}

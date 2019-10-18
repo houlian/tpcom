@@ -1,0 +1,193 @@
+{include file="layouts/header" /}
+  
+  <div class="layui-body">
+    <!-- 内容主体区域 -->
+    <div class="" style="height: 50px;line-height: 50px;margin-bottom: 0;border-radius: 0;background-color: #fff;box-shadow: 0 1px 2px 0 rgba(0,0,0,.05);">
+	    <div style="border-top: 1px solid #f6f6f6;padding: 0 15px;font-size: 0;height: 50px;line-height: 50px;margin-bottom: 0;border-radius: 0;">
+		    <span class="layui-breadcrumb" >
+			  <a href="" style="font-style: 微软雅黑;" >设置</a>
+			  <a style=""><cite>幻灯片列表</cite></a>
+			</span>
+	    </div>
+
+	</div>
+
+	<!-- 内容主体 -->
+    <div style="padding: 15px;position: relative;margin: 0 auto;height: 90%;">
+    	<div style="margin: -4.5px;">
+    		<div style="padding: 7.5px;width: 100%;float: left;background-color: #fff;margin-bottom: 25px;height: 100%;">
+
+    			<div class="layui-container" style="width: 100%;padding: 0 0px">
+    				    			<!-- 搜索区域 -->
+				  <div class="layui-row">
+				    <div class="layui-col-md4">
+				      <label style="font-size: 16px;font-family: 微软雅黑;">搜&nbsp;索&nbsp;：</label>
+				    </div>
+
+				    <div class="layui-col-md8" style="padding-right: 20px;">
+				    	<div class="layui-row ">
+				      		<div class="layui-col-md2">
+					      		&nbsp;
+					      	</div>
+					      	<div class="layui-col-md2" style="padding: 2px;">
+					      	</div>
+					      	<div class="layui-col-md2" style="padding: 2px;">
+					      	</div>
+					      	<div class="layui-col-md2" style="padding: 2px;">
+					      	</div>
+
+						    <div class="layui-col-md2" style="padding: 2px;">
+						    </div>
+						    <div class="layui-col-md1" style="padding: 2px;padding-left: 12px;">
+					        	&nbsp;
+						    </div>
+						    <div class="layui-col-md1" style="padding: 2px;">
+					        	<button class="layui-btn" id="searchbtn">搜&nbsp;&nbsp;索</button>
+						    </div>
+
+				      	</div>
+				    </div>
+				 </div>
+
+				 <div class="layui-row">
+				 	<div class="layui-col-md6 ">
+					 	<div class="layui-btn-group demoTable">
+						  <button class="layui-btn" data-type="getCheckData" id="addnew">新幻灯片</button>
+						</div>
+					</div>
+					<div class="layui-col-md6">
+					      		
+					</div>
+
+				 </div>
+				</div>
+
+				<hr>
+				<!-- 表格区域 -->
+				<div >
+						
+						<table id="tabledemo"></table>
+				</div>
+
+
+    		</div>
+
+    	</div>
+
+    </div>
+
+  </div>
+
+<div id='prevModal'>
+	<img id='img_prev'/>
+</div>
+
+	  <script type="text/javascript">
+	  	layui.use(['form','table','laydate'], function(){
+		  	var form = layui.form;
+	    	var laydate = layui.laydate;
+			//表格
+		  var table = layui.table;
+	  
+		  table.render({
+		    elem: '#tabledemo'
+		    ,url:'/index/setting/imagelist/'
+		    ,cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+		    ,height: 'full-200'
+		    ,cols: [[
+		    	{type:'checkbox'}
+		      ,{field:'id',  title: 'ID', sort: true,align:'center'}
+		      ,{field:'title', title: '标题',align:'center'}
+  		      ,{field:'path', title: '小图',templet: '#imgTpl',align:'center'}
+		      ,{field:'path',  title: '相对路径',align:'center'}
+		      ,{field:'url', title: '链接',align:'center'}
+		      ,{field:'addtime', title: '添加时间', sort: true,align:'center'}
+		      ,{field:'',title:'是否显示',  templet: '#checkboxTpl',align:'center'}
+		      ,{field:'',title:'操作', toolbar: '#barDemo',align:'center'}
+		    ]]
+		    ,response: {
+  				statusCode: 200 //成功的状态码，默认：0
+			} 
+			,page: false
+		  });
+
+		  //搜索
+		  $(document).on('click','#searchbtn',function(){
+		  	//执行表格重载
+		      table.reload('tabledemo', {
+		        page: false
+		        ,where: {
+		        }
+		      });
+		  });
+
+		  //新增
+		  $(document).on('click','#addnew',function(){
+		  	window.location.href = "/index/setting/addimage";
+		  });		  
+
+		  	//时间组件
+			laydate.render({
+			    elem: '#timestart' //指定元素
+			    ,type:'datetime'
+			});
+			laydate.render({
+			    elem: '#timeend' //指定元素
+			    ,type:'datetime'
+			});
+
+			  //监听锁定操作
+			  form.on('checkbox(lockDemo)', function(obj){
+			    // layer.tips(this.value + ' ' + this.title + '：'+ obj.elem.checked, obj.othis);
+			    var data = {'id':this.value};
+			    $.post("/index/setting/imagestatus",data,function(rtn){
+				  if(rtn.code==200){
+				    layer.msg(rtn.msg);
+				  }else{
+				  	var b = this.datas == 2? true : false;
+				  	obj.elem.checked = b;
+				    layer.msg(rtn.msg); 
+				  	form.render('checkbox'); //刷新select选择框渲染
+				  }
+				},"json");
+
+			  });
+
+			$(document).on('click', 'img', function(event) {
+				event.preventDefault();
+				$("#img_prev").attr("src",$(this).attr("src"));
+				/* Act on the event */
+				layer.open({
+				  type: 1,
+				  title: '',
+				  closeBtn: 0,
+				  area: ['auto','auto'],
+				  skin: 'layui-layer-nobg', //没有背景色
+				  shadeClose: true,
+				  content: $('#prevModal')
+				});
+			});
+
+		  //编辑
+		  $(document).on('click','.imageedit',function(){
+		  	window.location.href = "/index/setting/imagemodify?id=" + $(this).attr("dataid");
+		  });
+		});
+
+	</script>
+  	<script type="text/html" id="barDemo">
+	  <a class="layui-btn layui-btn-xs imageedit" dataid="{{d.id}}" lay-event="edit">编辑</a>
+	</script>
+	<script type="text/html" id="checkboxTpl">
+	  <input type="checkbox" name="lock" value="{{d.id}}" datas="{{d.status}}" title="显示" lay-filter="lockDemo" {{ d.status == 2 ? 'checked' : '' }}>
+	</script>
+	<script type="text/html" id="imgTpl">
+		<img src="{{ d.path }}" width="100" height="75">
+	</script>
+  <style type="text/css">
+  	html {background-color: #f2f2f2;color: #666;}
+    .layui-table-cell {height: auto;line-height: 28px;}
+    #prevModal {display:none;}
+	#img_prev {width:600px; height:450px;}
+  </style>
+{include file="layouts/footer" /}

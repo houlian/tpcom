@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>{$_projectname}</title>
+  <link rel="stylesheet" href="__STATIC__/layui/css/layui.css">
+  <script src="__STATIC__/jquery/jquery-1.8.3.min.js"></script>
+  <script src="__STATIC__/layui/layui.all.js"></script>
+  <script type="text/javascript">
+  	layui.use('element', function(){
+ 	 var element = layui.element;
+	});
+
+  </script>
+
+  <style type="text/css">
+  	.theme-black {background-color: #282d2f;}
+  	.login-logo {max-width: 159px;height: 205px;margin: 0 auto;margin-bottom: 20px;background: url(__STATIC__/image/base/blogin.png) center no-repeat;margin-top: 200px;}
+  	.layui-login {width: 400px;margin: 12% auto 0;margin-top: 10px;}
+  	.login-input {border: 0;border-bottom: 1px solid rgba(255, 255, 255, 0.2);background: 0 0;
+    background-image: none;transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+    transition-property: border-color, box-shadow;
+    transition-duration: 0.15s, 0.15s;
+    transition-timing-function: ease-in-out, ease-in-out;
+    transition-delay: initial, initial;border-radius: 0;
+    color: #fff;
+    box-shadow: none;
+    padding-left: 0;
+    padding-right: 0;
+    font-size: 14px;}
+  </style>
+
+</head>
+
+<body class="theme-black">
+	<div class="layui-layout ">
+
+		<div class="login-logo"></div>
+
+		<div class="layui-login">
+			<form class="layui-form" action="#">
+			  <div class="layui-form-item">
+			    <div class="">
+			      <input type="text" id="username" name="username"   lay-verify="required" placeholder="请输入账号" autocomplete="off" class="login-input layui-input" >
+			    </div>
+			  </div>
+			  <div class="layui-form-item">
+			    <div class="">
+			      <input type="password" id="password" name="password"  lay-verify="required" placeholder="请输入密码" autocomplete="off" class="login-input layui-input">
+			    </div>
+			  </div>
+			  
+			  
+			  <div class="layui-form-item">
+			    <div class="">
+			     <button id="login-btn" class="layui-btn layui-btn-fluid" style="background-color: #282d2f;border: 1px solid #b5b5b5;">登&nbsp;陆</button>
+			    </div>
+			  </div>
+			</form>
+
+		</div>
+
+		<div style="text-align: center;position: fixed;left: 0;right: 0;bottom: 0;height: 44px;line-height: 44px;padding: 0 15px;background-color: #393D49!important;color: #d2d2d2;">
+			江南大学科创项目
+		</div>
+	</div>
+
+</body>
+</html>
+
+<script type="text/javascript">
+
+$(document).ready(function (){
+	// var url = "{:url('index/index/login')}"
+    $('#username').focus();
+});
+  
+
+$('#login-btn').click(function(){
+  	var username = $.trim($("#username").val());
+  	var password = $.trim($("#password").val())
+	if(username == ''){
+	  layer.msg('用户名不能为空!');
+	  $("#username").focus();
+	  return false;
+	}
+	if(password == ''){
+	  layer.msg('密码不能为空!');
+	  $("#password").focus();
+	  return false;
+	}
+
+	var data = {"username":username,"password":password};
+	$("#login-btn").val("登录中,请稍候...");
+	$.post("/index/index/userlogin",data,function(rtn){
+	  if(rtn.code==200){
+	    layer.msg(rtn.msg);
+	    setTimeout(function(){
+	      window.location.reload();
+	    },1500);
+	    
+	  }else{
+	  	
+	    $("#login-btn").val("登录");
+	    layer.msg(rtn.msg);        
+	  }
+	},"json");
+	return false;
+});
+
+//监听回车事件
+$(document).keyup(function(event) {
+  if (event.keyCode ==13) {
+    $("#login-btn").trigger("click");
+  }
+});
+
+
+</script>
+

@@ -1,0 +1,97 @@
+{include file="layouts/header" /}
+  
+  <div class="layui-body">
+    <!-- 内容主体区域 -->
+    <div class="" style="height: 50px;line-height: 50px;margin-bottom: 0;border-radius: 0;background-color: #fff;box-shadow: 0 1px 2px 0 rgba(0,0,0,.05);">
+	    <div style="border-top: 1px solid #f6f6f6;padding: 0 15px;font-size: 0;height: 50px;line-height: 50px;margin-bottom: 0;border-radius: 0;">
+		    <span class="layui-breadcrumb" >
+			  <a href="" style="font-style: 微软雅黑;" >设&nbsp;置</a>
+			  <a style=""><cite>积分使用参考</cite></a>
+			</span>
+	    </div>
+
+	</div>
+
+	<!-- 内容主体 -->
+    <div style="padding: 15px;position: relative;margin: 0 auto;height: 90%;">
+    	<div style="margin: -4.5px;height: 100%;">
+    		<div style="padding: 7.5px;width: 100%;float: left;background-color: #fff;margin-bottom: 0;height: 100%;">
+
+    			<div class="layui-container" style="width: 100%;padding: 0 0px">
+    				    			<!-- 搜索区域 -->
+				  <div class="layui-row" style="text-align: center;">
+				      <label style="font-size: 24px;font-family: 微软雅黑;margin-left: auto; margin-right: auto;">积分使用参考</label>
+
+				 </div>
+				</div>
+
+				<hr>
+				<!-- 表单区域 -->
+				<div>
+					<div class="layui-form">
+						
+ 						<textarea placeholder="请输入积分使用参考" class="layui-textarea" required lay-verify="required" name="pointnotice">{$pointnotice}</textarea>
+ 						<div style="margin-top: 20px;"></div>
+ 						<button class="layui-btn layui-btn-fluid" lay-submit>提交修改</button>
+					</div>
+
+				</div>
+
+
+    		</div>
+
+    	</div>
+
+    </div>
+
+
+
+
+  </div>
+	  <script type="text/javascript">
+	  	var bool = true;
+	  	layui.use(['form'], function(){
+		  	var form = layui.form;
+		  	form.on('submit()', function(data){
+			  // console.log(data.elem) //被执行事件的元素DOM对象，一般为button对象
+			  // console.log(data.form) //被执行提交的form对象，一般在存在form标签时才会返回
+			  // console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
+			if (!bool) {return false;}
+			bool = false;
+		  	var data = {"pointnotice":data.field.pointnotice};
+			$.post("/index/setting/pointnoticemodify",data,function(rtn){
+			  if(rtn.code==200){
+			    layer.msg(rtn.msg);
+			    setTimeout(function(){
+			      window.location.reload();
+			    },1500);
+			    
+			  }else{
+			  	bool = true;
+			    layer.msg(rtn.msg);        
+			  }
+			},"json");
+
+			  return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+			});
+
+				  
+
+
+		  //搜索时间
+		  $(document).on('click','#searchbtn',function(){
+		  	//执行表格重载
+
+		  });
+
+		});
+
+	</script>
+  	<script type="text/html" id="barDemo">
+	  <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a>
+	  <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+	</script>
+  <style type="text/css">
+  	html {background-color: #f2f2f2;color: #666;}
+  </style>
+{include file="layouts/footer" /}

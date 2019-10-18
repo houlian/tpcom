@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>404notfound</title>
+  <script src="__STATIC__/jquery/jquery-1.8.3.min.js"></script>
+  </script>
+
+</head>
+
+<body class="theme-black">
+  <script src="__STATIC__/cartoon/snow.js"></script>
+	<div align="center" style="font-family: 微软雅黑;">
+		<img src="/static/image/base/404.jpg" alt="404图片" style="margin-top: 10%;" />
+		<div class="err_content">
+			<div class="tips">请检查您输入的网址是否正确，或者点击链接访问首页</div>
+			<div class="back_href">
+				<div class="href_index">您可以回到&nbsp;
+					<a href="/" class="jump_a">首页</a>&nbsp;或到&nbsp;
+					<a href="" id="back" class="jump_a">上一页</a>
+			</div>
+			</div>
+		</div>
+
+	</div>
+</body>
+</html>
+
+<script type="text/javascript">
+	$("#back").click(function(event) {
+		history.go(-1);
+	});
+</script>
+<style type="text/css">
+	.theme-black {background-color: #282d2f;}
+	.err_content {color: white;}
+	a:link {color:#87CEEB;}      /* 未访问链接*/
+	a:visited {color:#87CEEB;}  /* 已访问链接 */
+	a:hover {color:#9370DB;}  /* 鼠标移动到链接上 */
+	a:active {color:#F08080;}  /* 鼠标点击时 */
+</style>

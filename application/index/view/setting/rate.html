@@ -1,0 +1,155 @@
+{include file="layouts/header" /}
+  
+  <div class="layui-body">
+    <!-- 内容主体区域 -->
+    <div class="" style="height: 50px;line-height: 50px;margin-bottom: 0;border-radius: 0;background-color: #fff;box-shadow: 0 1px 2px 0 rgba(0,0,0,.05);">
+	    <div style="border-top: 1px solid #f6f6f6;padding: 0 15px;font-size: 0;height: 50px;line-height: 50px;margin-bottom: 0;border-radius: 0;">
+		    <span class="layui-breadcrumb" >
+			  <a href="" style="font-style: 微软雅黑;" >统&nbsp;计</a>
+			  <a style=""><cite>发单频率</cite></a>
+			</span>
+	    </div>
+
+	</div>
+
+	<!-- 内容主体 -->
+    <div style="padding: 15px;position: relative;margin: 0 auto;height: 90%;">
+    	<div style="margin: -4.5px;height: 100%;">
+    		<div style="padding: 7.5px;width: 100%;float: left;background-color: #fff;margin-bottom: 0;height: 100%;">
+
+    			<div class="layui-container" style="width: 100%;padding: 0 0px">
+    				    			<!-- 搜索区域 -->
+				  <div class="layui-row">
+				    <div class="layui-col-md4">
+				      <label style="font-size: 16px;font-family: 微软雅黑;">搜&nbsp;索&nbsp;：</label>
+				    </div>
+
+				    <div class="layui-col-md8" style="padding-right: 20px;">
+				    	<div class="layui-row ">
+				      		<div class="layui-col-md3">
+					      		&nbsp;
+					      	</div>
+
+					      	<div class="layui-col-md2" style="padding: 2px;">
+					      		
+					      	</div>
+					      	<div class="layui-col-md2" style="padding: 5px;">
+							      <span style="float: right;font-size: 20px;">统计天数：</span>
+					      	</div>
+
+						    <div class="layui-col-md1" style="padding: 2px;">
+						    	 <input type="text" name="title"  placeholder="统计天数"  class="layui-input" id="days" value="7">
+						    </div>
+							<div class="layui-col-md2" style="padding: 2px;padding-left: 12px;">
+								<input type="text" class="layui-input" id="timeindex" placeholder="基准时间" value="{$today}">
+						    </div>
+						    <div class="layui-col-md1" style="padding: 2px;padding-left: 12px;">
+					        	<button class="layui-btn" id="searchbtn">搜&nbsp;&nbsp;索</button>
+						    </div>
+						    <div class="layui-col-md1" style="padding: 2px;">
+					        	<!-- <button class="layui-btn" id="export">报表导出</button> -->
+						    </div>
+
+				      	</div>
+				    </div>
+				 </div>
+
+				 <div class="layui-row">
+				 	<div class="layui-col-md10">
+				      	<label style="font-size: 12px;font-family: 微软雅黑;color: red;">选择的日期为选择日的凌晨 比如时间选择2020-1-1实际为2020-1-1 00:00:00</label>
+					</div>
+					<div class="layui-col-md2">
+					      		
+					</div>
+
+				 </div>
+
+				</div>
+
+				<hr>
+				<!-- 表格区域 -->
+				<div>
+					<table id="tabledemo" lay-filter="tabledemo"></table>
+				</div>
+
+
+    		</div>
+
+    	</div>
+
+    </div>
+
+  </div>
+
+
+
+	  <script type="text/javascript">
+	  	layui.use('layer', function(){
+		  var layer = layui.layer;
+		});
+	  	layui.use(['form','table','laydate'], function(){
+		  	var form = layui.form;
+	    	var laydate = layui.laydate;
+
+
+		//表格
+		  var table = layui.table;
+	  
+		  table.render({
+		    elem: '#tabledemo'
+		    ,url:'/index/setting/ratelist'
+		    ,cellMinWidth: 50 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+		    ,cols: [[
+		    	{type:'checkbox'}
+		      ,{field:'userid',  title: '用户id'}
+		      ,{field:'rate',  title: '下单频率'}
+		      ,{field:'payall', title: '使用积分(SUM)'}
+		      ,{field:'',title:'操作',toolbar: '#barDemo'}
+		    ]]
+		    ,response: {
+  				statusCode: 200 //成功的状态码，默认：0
+			} 
+			,page: false
+		  });
+
+		  //搜索
+		  $(document).on('click','#searchbtn',function(){
+		  	//执行表格重载
+		      table.reload('tabledemo', {
+		        page: false
+		        ,where: {
+	            	timeindex: $('#timeindex').val(),
+	            	days: $('#days').val(),
+		        }
+		      });
+		  });
+
+		 //搜索报表导出
+		  $(document).on('click','#export',function(){
+		  	var url = '/index/order/orderexport?';
+		  	url += "userid=" + $.trim($('#userid').val());
+		  	url += "&status=" + $.trim($('#status').val());
+		  	url += "&timestart=" + $.trim($('#timestart').val());
+		  	url += "&timeend=" + $.trim($('#timeend').val());
+
+		  	window.open(url);
+		  });
+
+		  	//时间组件
+			laydate.render({
+			    elem: '#timeindex' //指定元素
+			    ,type:'date'
+			});
+
+
+
+		});
+
+	</script>
+  	<script type="text/html" id="barDemo">
+	</script>
+
+  <style type="text/css">
+  	html {background-color: #f2f2f2;color: #666;}
+  </style>
+{include file="layouts/footer" /}

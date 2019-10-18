@@ -1,0 +1,193 @@
+{include file="layouts/header" /}
+  
+  <div class="layui-body">
+    <!-- 内容主体区域 -->
+    <div class="" style="height: 50px;line-height: 50px;margin-bottom: 0;border-radius: 0;background-color: #fff;box-shadow: 0 1px 2px 0 rgba(0,0,0,.05);">
+	    <div style="border-top: 1px solid #f6f6f6;padding: 0 15px;font-size: 0;height: 50px;line-height: 50px;margin-bottom: 0;border-radius: 0;">
+		    <span class="layui-breadcrumb" >
+			  <a href="" style="font-style: 微软雅黑;" >优惠券</a>
+			  <a style=""><cite>优惠券列表</cite></a>
+			</span>
+	    </div>
+
+	</div>
+
+	<!-- 内容主体 -->
+    <div style="padding: 15px;position: relative;margin: 0 auto;height: 90%;">
+    	<div style="margin: -4.5px;height: 100%;">
+    		<div style="padding: 7.5px;width: 100%;float: left;background-color: #fff;margin-bottom: 0;height: 100%;">
+
+    			<div class="layui-container" style="width: 100%;padding: 0 0px">
+    				    			<!-- 搜索区域 -->
+				  <div class="layui-row">
+				    <div class="layui-col-md4">
+				      <label style="font-size: 16px;font-family: 微软雅黑;">搜&nbsp;索&nbsp;：</label>
+				    </div>
+
+				    <div class="layui-col-md8" style="padding-right: 20px;">
+				    	<div class="layui-row ">
+					      	<div class="layui-col-md2" style="padding: 2px;">
+					      		<input type="text" class="layui-input" id="timestart" placeholder="起始时间">
+					      	</div>
+					      	<div class="layui-col-md2" style="padding: 2px;">
+					      		<input type="text" class="layui-input" id="timeend" placeholder="结束时间">
+					      	</div>
+					      	<div class="layui-col-md2" style="padding: 2px;">
+							      <input type="text" name="title"  placeholder="请输入用户id" autocomplete="off" class="layui-input" id="userid">
+					      	</div>
+
+						    <div class="layui-col-md2" style="padding: 2px;">
+						       <div class="layui-form">
+							      	<select name="interest" lay-filter="aihao" id="status">
+							      		<option value="0">状态</option>
+							        	<option value="1">未领取</option>
+							        	<option value="2">已领取</option>
+							        	<option value="3">已使用</option>
+							        	<option value="4">已失效</option>
+							      	</select>
+							    </div> 
+						    </div>
+						    <div class="layui-col-md1" style="padding: 2px;padding-left: 12px;">
+					        	&nbsp;
+						    </div>
+						    <div class="layui-col-md13" style="padding: 2px;">
+					        	<button class="layui-btn" id="searchbtn">搜&nbsp;&nbsp;索</button>
+					        	<button class="layui-btn" id="addred">定制优惠券</button>
+						    </div>
+
+				      	</div>
+				    </div>
+				 </div>
+
+				 <div class="layui-row">
+				 	<div class="layui-col-md6 ">
+					 	<div class="layui-btn-group demoTable">
+						  <!-- <button class="layui-btn" data-type="getCheckData" id="multidelte">批量作废</button> -->
+						  <!-- <button class="layui-btn" data-type="getCheckLength">获取选中数目</button>
+						  <button class="layui-btn" data-type="isAll">验证是否全选</button> -->
+						</div>
+					</div>
+					<div class="layui-col-md6">
+					      		
+					</div>
+
+				 </div>
+				</div>
+
+				<hr>
+				<!-- 表格区域 -->
+				<div>
+					<table id="tabledemo"  lay-filter="tabledemo"></table>
+				</div>
+
+
+    		</div>
+
+    	</div>
+
+    </div>
+
+  </div>
+
+
+
+
+	  <script type="text/javascript">
+	  	layui.use(['form','table','laydate'], function(){
+		  	var form = layui.form;
+	    	var laydate = layui.laydate;
+
+
+		//表格
+		  var table = layui.table;
+	  
+		  table.render({
+		    elem: '#tabledemo'
+		    ,url:'/index/order/redlist/'
+		    ,cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+		    ,cols: [[
+		    	{type:'checkbox'}
+		      ,{field:'id',  title: 'ID', sort: true}
+		      ,{field:'redcode',  title: '优惠券码'}
+		      ,{field:'takecode',  title: '兑换码'}
+		      ,{field:'userid',  title: '用户id'}
+		      ,{field:'type',  title: '类别'}
+		      ,{field:'status', title: '状态'}
+		      ,{field:'expiration', title: '过期时间', sort: true}
+		      ,{field:'addtime', title: '生成时间', sort: true}
+		      ,{field:'gettime', title: '领取时间'}
+		      ,{field:'',title:'操作',toolbar: '#barDemo'}
+		    ]]
+		    ,response: {
+  				statusCode: 200 //成功的状态码，默认：0
+			} 
+			,page: true
+			,limit: 100
+			,limits: [15,30,50,100]    
+		  });
+
+
+
+
+		  //搜索
+		  $(document).on('click','#searchbtn',function(){
+		  	//执行表格重载
+		      table.reload('tabledemo', {
+		        page: {
+		          curr: 1 //重新从第 1 页开始
+		        }
+		        ,where: {
+	            	userid: $('#userid').val(),
+	            	status: $('#status').val(),
+	            	timestart: $('#timestart').val(),
+	            	timeend: $('#timeend').val()
+		        }
+		      });
+		  });
+		  $(document).on('click','#addred',function(){
+		  	var url = '/index/order/addred';
+		  	window.open(url);
+		  });
+
+		  //批量作废
+		  $(document).on('click','#multidelte',function(){
+	     	var checkStatus = table.checkStatus('tabledemo')
+		      ,data = checkStatus.data;
+		      if (data.length <= 0 ) {layer.msg("选择为空")};return false;
+	      	var a = [];
+	      	$.each(data,function(index, v) {
+	      		a.push(v.id);
+	      	});
+	      	// layer.alert(JSON.stringify(a));
+		  });		  
+
+		 //搜索报表导出
+		  $(document).on('click','#export',function(){
+		  	var url = '/index/order/orderexport?';
+		  	url += "userid=" + $.trim($('#userid').val());
+		  	url += "&status=" + $.trim($('#status').val());
+		  	url += "&timestart=" + $.trim($('#timestart').val());
+		  	url += "&timeend=" + $.trim($('#timeend').val());
+
+		  	window.open(url);
+		  });
+
+		  	//时间组件
+			laydate.render({
+			    elem: '#timestart' //指定元素
+			    ,type:'datetime'
+			});
+			laydate.render({
+			    elem: '#timeend' //指定元素
+			    ,type:'datetime'
+			});
+		});
+
+	</script>
+  	<script type="text/html" id="barDemo">
+	  
+	</script>
+  <style type="text/css">
+  	html {background-color: #f2f2f2;color: #666;}
+  </style>
+{include file="layouts/footer" /}

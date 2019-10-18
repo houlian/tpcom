@@ -1,0 +1,112 @@
+{include file="layouts/header" /}
+  
+  <div class="layui-body">
+    <!-- 内容主体区域 -->
+    <div class="" style="height: 50px;line-height: 50px;margin-bottom: 0;border-radius: 0;background-color: #fff;box-shadow: 0 1px 2px 0 rgba(0,0,0,.05);">
+	    <div style="border-top: 1px solid #f6f6f6;padding: 0 15px;font-size: 0;height: 50px;line-height: 50px;margin-bottom: 0;border-radius: 0;">
+		    <span class="layui-breadcrumb" >
+			  <a href="" style="font-style: 微软雅黑;" >设&nbsp;置</a>
+			  <a style=""><cite>服务条款</cite></a>
+			</span>
+	    </div>
+
+	</div>
+
+	<!-- 内容主体 -->
+    <div style="padding: 15px;position: relative;margin: 0 auto;height: 90%;">
+    	<div style="margin: -4.5px;height: 100%;">
+    		<div style="padding: 7.5px;width: 100%;float: left;background-color: #fff;margin-bottom: 0;height: 100%;">
+
+    			<div class="layui-container" style="width: 100%;padding: 0 0px">
+    				    			<!-- 搜索区域 -->
+				  <div class="layui-row" style="text-align: center;">
+				      <label style="font-size: 24px;font-family: 微软雅黑;margin-left: auto; margin-right: auto;">服务条款</label>
+
+				 </div>
+				</div>
+
+				<hr>
+				<!-- 表单区域 -->
+				<div>
+					<div class="layui-form">
+						
+ 						<textarea placeholder="请输入服务条款" class="layui-textarea" required lay-verify="required" name="servicenotice" id="servicenotice">{$servicenotice}</textarea>
+ 						<div style="margin-top: 20px;"></div>
+ 						<button class="layui-btn layui-btn-fluid" lay-submit id="save">提交修改</button>
+					</div>
+
+				</div>
+
+
+    		</div>
+
+    	</div>
+
+    </div>
+
+
+  </div>
+  <script src="__STATIC__/ueditor/ueditor.config.js"></script>
+  <script src="__STATIC__/ueditor/ueditor.all.js"></script>
+
+	  <script type="text/javascript">
+	  	layui.use('layer', function(){
+		  var layer = layui.layer;
+		  
+		  // layer.msg('hello',{time:3000,icon: 1});
+		});  
+
+	  	var ueurl = "/static/ueditor/";
+        var ue = UE.getEditor('servicenotice',{
+        	// 服务器统一请求接口路径
+            serverUrl: ueurl +"php/controller.php"
+
+            //工具栏上的所有的功能按钮和下拉框，可以在new编辑器的实例时选择自己需要的重新定义
+            , toolbars: [[
+                'source', '|', 'undo', 'redo', '|',
+                'bold', 'italic', 'underline', 'fontborder', 'strikethrough', 'superscript', 'subscript', 'removeformat', 'formatmatch', 'autotypeset', 'blockquote', 'pasteplain', '|',
+                'forecolor', 'backcolor', 'insertorderedlist', 'insertunorderedlist', 'selectall', 'cleardoc', '|',
+                'rowspacingtop', 'rowspacingbottom', 'lineheight', '|',
+                'customstyle', 'paragraph', 'fontfamily', 'fontsize', '|',
+                'directionalityltr', 'directionalityrtl', 'indent', '|',
+                'justifyleft', 'justifycenter', 'justifyright', 'justifyjustify', '|', 'touppercase', 'tolowercase', '|',
+                'simpleupload', 'emotion', 'scrawl', 'pagebreak', 'template', 'background', '|',
+                'horizontal', 'date', 'time', 'spechars', '|',
+                'preview'
+            ]]
+        // ,initialFrameWidth : 800
+        ,initialFrameHeight : 500
+        ,wordCount : false
+        ,maximumWords : 15000
+        });
+
+       var bool = true;
+       $(document).on('click',"#save",function(){
+		   	if (!bool) {return false;}
+			bool = false;
+		   	var content = ue.getContent();
+		   	var data = {'content':content};
+		   	var url = "/index/setting/servicenoticemodify";
+			$.post(url, {"data":data},function(rtn){
+			  if(rtn.code==200){
+			    layer.msg(rtn.msg,{time:3000,icon: 1});
+			    setTimeout(function(){
+			      window.location.reload();
+			    },1500);
+			  }else{
+			  	bool = false;
+			    layer.msg(rtn.msg,{time:3000,icon: 5});
+			  }
+			},'json');
+       })
+	
+	</script>
+
+  	<script type="text/html" id="barDemo">
+	  <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a>
+	  <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+	</script>
+  <style type="text/css">
+  	html {background-color: #f2f2f2;color: #666;}
+  </style>
+{include file="layouts/footer" /}

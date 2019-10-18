@@ -1,0 +1,131 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>{$_projectname}</title>
+  <!-- <link rel="stylesheet" href="__STATIC__/layui/css/layui.css"> -->
+  <link rel="stylesheet" type="text/css" href="https://www.layuicdn.com/layui/css/layui.css" />
+  <script src="__STATIC__/jquery/jquery-1.8.3.min.js"></script>
+  <!-- <script src="__STATIC__/layui/layui.js"></script> -->
+  <script src="https://www.layuicdn.com/layui/layui.js"></script>
+</head>
+
+<style type="text/css">
+.layui-side-menu .layui-nav .layui-nav-item .layui-icon {position: absolute;top: 50%;left: 20px;margin-top: -19px;}
+  .layui-side-menu .layui-nav .layui-nav-item a{height:40px;line-height:40px;padding-left:60px;padding-right:30px}
+  .layui-layout-admin .layui-body { bottom: 0px;}
+</style>
+
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+  <div class="layui-header">
+    <div class="layui-logo">{$_projectname}</div>
+    <!-- 头部区域（可配合layui已有的水平导航） -->
+    <ul class="layui-nav layui-layout-left">
+      <li class="layui-nav-item" lay-unselect="">
+        <a href="javascript:;" layadmin-event="refresh" id="layui_refresh" title="刷新">
+          <i class="layui-icon layui-icon-refresh-3"></i>
+        </a>
+      </li>
+      <!--
+      <li class="layui-nav-item">
+        <a href="javascript:;">其它系统</a>
+        <dl class="layui-nav-child">
+          <dd><a href="">邮件管理</a></dd>
+          <dd><a href="">消息管理</a></dd>
+          <dd><a href="">授权管理</a></dd>
+        </dl>
+      </li>
+      -->
+    </ul>
+
+    <ul class="layui-nav layui-layout-right">
+      <li class="layui-nav-item" lay-unselect="">
+        <a lay-href="app/message/" layadmin-event="message"><i class="layui-icon layui-icon-notice"></i><span class="layui-badge-dot"></span></a>
+      </li>
+
+      <li class="layui-nav-item layui-hide-xs" lay-unselect="">
+        <a href="javascript:;" layadmin-event="theme"><i class="layui-icon layui-icon-theme"></i></a>
+      </li>
+      <li class="layui-nav-item layui-hide-xs" lay-unselect="">
+        <a href="javascript:;" layadmin-event="note"><i class="layui-icon layui-icon-note"></i></a>
+      </li>
+
+      <li class="layui-nav-item">
+        <a href="javascript:;">
+          <img src="/static/image/base/headpic.png" class="layui-nav-img">
+          {$_username}
+        </a>
+        <dl class="layui-nav-child">
+          <dd><a href="">基本资料</a></dd>
+          <dd><a href="">安全设置</a></dd>
+        </dl>
+      </li>
+      <li class="layui-nav-item"><a href="/index/index/logout">退了</a></li>
+    </ul>
+  </div>
+  
+
+  <div class="layui-side layui-bg-black layui-side-menu">
+    <div class="layui-side-scroll">
+      <!-- 左侧导航区域（可配合layui已有的垂直导航）layui-nav-itemed -->
+      <ul class="layui-nav layui-nav-tree"  lay-filter="">
+
+
+
+        <li class="layui-nav-item" id="nav_member_index"><a href="/index/member/index"><i class="layui-icon layui-icon-user"></i><cite>用&nbsp;户</cite></a></li>
+        <li class="layui-nav-item">
+          <a class="" href="#"><i class="layui-icon layui-icon-template"></i><cite>订&nbsp;单</cite></a>
+          <dl class="layui-nav-child">
+            <dd id="nav_order_index"><a href="/index/order/index">代取订单</a></dd>
+            <dd id="nav_order_deposit"><a href="/index/order/deposit">充值订单</a></dd>
+            <dd id="nav_order_withdraw"><a href="/index/order/withdraw">提现订单</a></dd>
+          </dl>
+        </li>
+        
+        <li class="layui-nav-item" id="nav_member_route"><a href="/index/member/route"><i class="layui-icon layui-icon-release"></i><cite>行&nbsp;程</cite></a></li>
+        <li class="layui-nav-item" id="nav_order_red"><a href="/index/order/red"><i class="layui-icon layui-icon-star-fill"></i><cite>优&nbsp;惠</cite></a></li>
+
+        <li class="layui-nav-item">
+          <a href="#"><i class="layui-icon layui-icon-console"></i><cite>统&nbsp;计</cite></a>
+          <dl class="layui-nav-child">
+            <dd id="nav_setting_rate"><a href="/index/setting/rate">用户下单频率</a></dd>
+            <dd id="nav_member_opinion"><a href="/index/member/opinion">用户建议</a></dd>
+          </dl>
+        </li>        
+        <li class="layui-nav-item">
+          <a href="#"><i class="layui-icon layui-icon-set"></i><cite>设&nbsp;置</cite></a>
+          <dl class="layui-nav-child">
+            <dd id="nav_setting_address"><a href="/index/setting/address">园区地址</a></dd>
+            <dd id="nav_setting_pointnotice"><a href="/index/setting/pointnotice">积分使用参考</a></dd>
+            <dd id="nav_setting_servicenotice"><a href="/index/setting/servicenotice">服务条款</a></dd>
+            <dd id="nav_setting_param"><a href="/index/setting/param">参数设置</a></dd>
+            <dd id="nav_setting_redconf"><a href="/index/setting/redconf">优惠券设置</a></dd>
+            <dd id="nav_setting_viewpager"><a href="/index/setting/viewpager">小程序幻灯片</a></dd>
+          </dl>
+        </li>
+        <li class="layui-nav-item">
+          <a href="#"><i class="layui-icon layui-icon-username"></i><cite>超级管理员</cite></a>
+          <dl class="layui-nav-child">
+            <dd id="nav_admin_index"><a href="/index/admin/index">账号管理</a></dd>
+            <dd id="nav_admin_finance"><a href="/index/admin/finance">财务管理</a></dd>
+          </dl>
+        </li>
+
+      </ul>
+    </div>
+  </div>
+
+<script>
+var selector = "#nav_{$_controller}_{$_action}";
+layui.use('element', function(){
+  var element = layui.element;
+  $(selector).addClass('layui-this');
+  $(selector).parent().parent().addClass('layui-nav-itemed');
+  $("#layui_refresh").click(function(event) {
+    window.location.reload();
+  });
+});
+</script>
